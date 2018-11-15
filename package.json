@@ -1,6 +1,6 @@
 {
   "name": "@immutabl3/act",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Declarative React animations",
   "main": "./src/index.js",
   "browser": "./dist/act.min.js",
