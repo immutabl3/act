@@ -6,13 +6,13 @@ const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
 	entry: './src/index.js',
-	mode: 'production',
+	mode: 'development',
 	devtool: 'source-map',
 	output: {
 		library: 'act',
 		libraryTarget: 'umd',
 		path: path.resolve(process.cwd(), 'dist'),
-		filename: 'act.min.js',
+		filename: 'act.js',
 	},
 	externals: [
 		'react',
