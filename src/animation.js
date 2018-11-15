@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import fluid from '@immutabl3/fluid';
+import curry from 'curry';
 
 const truthy = () => true;
 
-const actAnimation = function(View, config = {}) {
+const actAnimation = function(config = {}, View) {
 	const {
 		state = {},
 		when = truthy,
@@ -12,7 +12,7 @@ const actAnimation = function(View, config = {}) {
 	const isArray = Array.isArray(View);
 
 	return function actAnimationWrap(animator) {
-		const animation = animator(fluid);
+		const animation = animator();
 
 		return class ActAnimation extends Component {
 			constructor(props) {
@@ -23,8 +23,10 @@ const actAnimation = function(View, config = {}) {
 				this.onUpdate = this.onUpdate.bind(this);
 				this.renderView = this.renderView.bind(this);
 
-				const initialState = typeof state === 'function' ? state(props) : state;
-				this.state = Object.assign({}, initialState);
+				const initialState = typeof state === 'function' ? 
+					state(props) : 
+					Object.assign({}, state);
+				this.state = initialState;
 
 				if (when(this.props, this.state)) this.start();
 			}
@@ -78,4 +80,4 @@ const actAnimation = function(View, config = {}) {
 	};
 };
 
-export default actAnimation;
+export default curry(actAnimation);

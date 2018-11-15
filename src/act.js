@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
-import fluid from '@immutabl3/fluid';
+import curry from 'curry';
 
-const act = function(View, config = {}) {
+const act = function(config = {}, View) {
 	const {
 		key = 'act',
 		state = {},
 	} = config;
 
-	return function(configFn) {
-		const config = configFn(fluid);
+	return function(configurator) {
+		const config = typeof configurator === 'function' ? 
+			configurator() : 
+			Object.assign({}, configurator);
+
 		return class Act extends Component {
 			constructor(props) {
 				super(props);
@@ -17,8 +20,10 @@ const act = function(View, config = {}) {
 				this.start = this.start.bind(this);
 				this.stop = this.stop.bind(this);
 
-				const initialState = typeof state === 'function' ? state(props) : state;
-				this.state = Object.assign({}, initialState);
+				const initialState = typeof state === 'function' ? 
+					state(props) : 
+					Object.assign({}, state);
+				this.state = initialState;
 			}
 
 			componentDidUpdate(prevProps) {
@@ -82,4 +87,4 @@ const act = function(View, config = {}) {
 	};
 };
 
-export default act;
+export default curry(act);

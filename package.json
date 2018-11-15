@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "Declarative React animations",
   "main": "./src/index.js",
+  "browser": "./dist/act.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -17,8 +19,22 @@
     "url": "https://github.com/immutabl3/act/issues"
   },
   "homepage": "https://github.com/immutabl3/act#readme",
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.4",
+    "@babel/runtime": "^7.1.2",
+    "compression-webpack-plugin": "^2.0.0",
+    "date-fns": "^1.29.0",
+    "webpack": "^4.22.0",
+    "webpack-cli": "^3.1.2"
+  },
+  "peerDependencies": {
+    "@immutabl3/fluid": "^1.0.0"
+  },
   "dependencies": {
-    "@immutabl3/fluid": "^1.0.0",
-    "react": "^16.6.3"
+    "react": "^16.6.3",
+    "curry": "^1.2.0"
   }
 }
