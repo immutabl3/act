@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import curry from 'curry';
+import curry from 'lodash.curry';
 
 const truthy = () => true;
 
