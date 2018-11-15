@@ -27,7 +27,9 @@ const actAnimation = function(config = {}, View) {
 					state(props) : 
 					Object.assign({}, state);
 				this.state = initialState;
+			}
 
+			componentDidMount() {
 				if (when(this.props, this.state)) this.start();
 			}
 

@@ -26,6 +26,19 @@ const act = function(config = {}, View) {
 				this.state = initialState;
 			}
 
+			componentDidMount() {
+				// check for an animation function
+				const fn = config[this.props[key]];
+				if (!fn) return;
+
+				// create the animation
+				const anim = fn(this.props, this.state);
+
+				this.anim = Array.isArray(anim) ? 
+					anim.map(this.start) : 
+					this.start(anim);
+			}
+
 			componentDidUpdate(prevProps) {
 				// no change
 				if (this.props[key] === prevProps[key]) return;
