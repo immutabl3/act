@@ -66,8 +66,8 @@ const act = function(config = {}, View) {
 				this.setState(obj);
 			}
 
-			start(tween) {
-				return tween
+			start(anim) {
+				return anim
 					.on('update', this.onUpdate)
 					.start();
 			}
@@ -81,7 +81,7 @@ const act = function(config = {}, View) {
 					this.anim.stop();
 				}
 				
-				this.tween = undefined;
+				this.anim = undefined;
 			}
 
 			render() {
