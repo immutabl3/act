@@ -31,7 +31,7 @@
     "webpack-cli": "^3.1.2"
   },
   "peerDependencies": {
-    "@immutabl3/fluid": "^1.0.0"
+    "@immutabl3/fluid": "^1.1.0"
   },
   "dependencies": {
     "lodash.curry": "^4.1.1",
