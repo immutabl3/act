@@ -6,7 +6,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
 	entry: './src/index.js',
-	mode: 'development',
+	mode: 'production',
 	devtool: 'source-map',
 	output: {
 		library: 'act',
