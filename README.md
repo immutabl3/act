@@ -56,7 +56,7 @@ Using the `Slide` component:
 
 ```js
 import React from 'react';
-import Slide from './Slide;
+import Slide from './Slide';
 
 export default function Container({ active }) {
 	return (
