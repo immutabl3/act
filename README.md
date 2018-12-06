@@ -18,37 +18,37 @@ import act from '@immutabl3/act';
 import fluid from '@immutabl3/fluid';
 
 const Slide = function({ x }) {
-	return (
-		<div style={ { transform: `translateX(${x}px)` } }>
-			hello
-		</div>
-	);
+  return (
+    <div style={ { transform: `translateX(${x}px)` } }>
+      hello
+    </div>
+  );
 };
 
 export default act({
-	// set initial state for the animation.
-	// this can also be a function if we needed
-	// to determine the initial x value based on
-	// props
-	state: { x: 0 },
-	// when in the open state...
-	open(props, state) {
-		return fluid(
-			// go from the current x position...
-			{ x: state.x },
-			// to an "open" x position of 100
-			{ x: 100 },
-			{ duration: 500 }
-		);
-	},
-	// the reverse of open
-	close(props, state) {
-		return fluid(
-			{ x: state.x },
-			{ x: 0 },
-			{ duration: 500 }
-		);
-	},
+  // set initial state for the animation.
+  // this can also be a function if we needed
+  // to determine the initial x value based on
+  // props
+  state: { x: 0 },
+  // when in the open state...
+  open(props, state) {
+    return fluid(
+      // go from the current x position...
+      { x: state.x },
+      // to an "open" x position of 100
+      { x: 100 },
+      { duration: 500 }
+    );
+  },
+  // the reverse of open
+  close(props, state) {
+    return fluid(
+      { x: state.x },
+      { x: 0 },
+      { duration: 500 }
+    );
+  },
 }, Slide);
 ```
 
@@ -59,13 +59,13 @@ import React from 'react';
 import Slide from './Slide';
 
 export default function Container({ active }) {
-	return (
-		<Slide
-			// the "act" property controls which
-			// state the component should animate to
-			act={ active ? 'open' : 'close' }
-		/>
-	);
+  return (
+    <Slide
+      // the "act" property controls which
+      // state the component should animate to
+      act={ active ? 'open' : 'close' }
+    />
+  );
 };
 ```
 
