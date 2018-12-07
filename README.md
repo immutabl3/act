@@ -150,6 +150,9 @@ your components:
 import act from '@immutabl3/act';
 import fluid from '@immutabl3/fluid';
 
+// creating a curried animation
+// by not passing the component
+// to act
 const animation = act({
   state: { x: 0 },
   open(props, state) {
@@ -166,8 +169,8 @@ const animation = act({
   },
 });
 
-// animation is a curried function and can
-// be called with a component later:
+// animation is now a curried function 
+// and can be called with a component later:
 export default animation(Component);
 ```
 
