@@ -69,9 +69,107 @@ export default function Container({ active }) {
 };
 ```
 
+## Continuous animation
+
+Continuous animations, or animations that should start and stop declaratively
+have a separate control mechanism. To illustrate, we'll create a `Spinner` 
+component that will animate when `active`.
+
+```js
+import React from 'react';
+import { animation } from '@immutabl3/act';
+import fluid from '@immutabl3/fluid';
+
+const Spinner = function({ deg }) {
+  return (
+    <div style={ { transform: `rotate(${deg}deg)` } }/>
+  );
+};
+
+export default animation({
+  // set initial state for the animation.
+  state: { deg: 0 },
+  // animate when active
+  when: props => props.active,
+  // the animation to run
+  animation(props, state) {
+    return fluid(
+      { deg: state.deg },
+      { deg: 360 },
+      { duration: 500, repeat: Infinity }
+    );
+  },
+}, Spinner);
+```
+
 ## Options
 
-// TODO: options
+### `act`
+
+`act(config, Component)`
+
+#### *`config.key`* _default: *'act'*
+
+The key that controls the animation state. Changes to the value 
+of this key call the matching animation on the configuration object.
+
+#### *`config.state`* _default: *{}*_
+
+The starting state of the component. This can be a static object or 
+a function that is passed the component's properties. Note that declarative 
+animations require changes to-and-from states to animate. This method allows 
+the component to render in the correct state for the current `act` value.
+
+### `animation`
+
+`animation(config, Component)`
+
+#### *`config.animation`*
+
+A function returning the animation to be ran when `when` asserts `true`.
+
+#### *`config.state`* _default: *{}*_
+
+See `act` state above.
+
+#### *`config.when`* _default: *() => true*_
+
+A function that returns a boolean indicating if the animation should be active.
+
+## Lists
+
+Both `act` and `animation` can take an array of React components to render. The 
+key will be the index of the element in the array.
+
+## Currying
+
+Both `act` and `animation` are curried, allowing you to functionally compose 
+your components:
+
+```js
+import act from '@immutabl3/act';
+import fluid from '@immutabl3/fluid';
+
+const animation = act({
+  state: { x: 0 },
+  open(props, state) {
+    return fluid(
+      { x: state.x },
+      { x: 100 }
+    );
+  },
+  close(props, state) {
+    return fluid(
+      { x: state.x },
+      { x: 0 }
+    );
+  },
+});
+
+// animation is a curried function and can
+// be called with a component later:
+export default animation(Component);
+```
 
 ## Tests
 
