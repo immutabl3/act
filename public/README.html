@@ -1,0 +1,147 @@
+<h1 id="act">act</h1>
+<p><code>act</code> is a small (<code>5.5KB</code> minified, <code>1.76KB</code> gzipped), declarative React animation library inspired by <a href="https://popmotion.io/pose/">pose</a> and built to work with <a href="https://github.com/immutabl3/fluid">@immutabl3/fluid</a></p>
+<h2 id="installation">Installation</h2>
+<p><code>$ npm i @immutabl3/act</code></p>
+<h2 id="usage">Usage</h2>
+<p>General usage:</p>
+<p>Creating a declarative <code>Slide</code> component that will slide when open and closed:</p>
+<pre><code class="language-js">import React from &#39;react&#39;;
+import act from &#39;@immutabl3/act&#39;;
+import fluid from &#39;@immutabl3/fluid&#39;;
+
+const Slide = function({ x }) {
+  return (
+    &lt;div style={ { transform: `translateX(${x}px)` } }&gt;
+      hello
+    &lt;/div&gt;
+  );
+};
+
+export default act({
+  // set initial state for the animation.
+  // this can also be a function if we needed
+  // to determine the initial x value based on
+  // props
+  state: { x: 0 },
+  // when in the open state...
+  open(props, state) {
+    return fluid(
+      // go from the current x position...
+      { x: state.x },
+      // to an &quot;open&quot; x position of 100
+      { x: 100 },
+      { duration: 500 }
+    );
+  },
+  // the reverse of open
+  close(props, state) {
+    return fluid(
+      { x: state.x },
+      { x: 0 },
+      { duration: 500 }
+    );
+  },
+}, Slide);</code></pre>
+<p>Using the <code>Slide</code> component:</p>
+<pre><code class="language-js">import React from &#39;react&#39;;
+import Slide from &#39;./Slide&#39;;
+
+export default function Container({ active }) {
+  return (
+    &lt;Slide
+      // the &quot;act&quot; property controls which
+      // state the component should animate to
+      act={ active ? &#39;open&#39; : &#39;close&#39; }
+    /&gt;
+  );
+};</code></pre>
+<h2 id="continuous-animation">Continuous animation</h2>
+<p>Continuous animations, or animations that should start and stop declaratively
+have a separate control mechanism. To illustrate, we&#39;ll create a <code>Spinner</code> 
+component that will animate when <code>active</code>.</p>
+<pre><code class="language-js">import React from &#39;react&#39;;
+import { animation } from &#39;@immutabl3/act&#39;;
+import fluid from &#39;@immutabl3/fluid&#39;;
+
+const Spinner = function({ deg }) {
+  return (
+    &lt;div style={ { transform: `rotate(${deg}deg)` } }/&gt;
+  );
+};
+
+export default animation({
+  // set initial state for the animation.
+  state: { deg: 0 },
+  // animate when active
+  when: props =&gt; props.active,
+  // the animation to run
+  animation(props, state) {
+    return fluid(
+      { deg: state.deg },
+      { deg: 360 },
+      { duration: 500, repeat: Infinity }
+    );
+  },
+}, Spinner);</code></pre>
+<h2 id="options">Options</h2>
+<h3 id="act"><code>act</code></h3>
+<p><code>act(config, Component)</code></p>
+<h4 id="config-key-_default-act-"><em><code>config.key</code></em> _default: <em>&#39;act&#39;</em></h4>
+<p>The key that controls the animation state. Changes to the value 
+of this key call the matching animation on the configuration object.</p>
+<h4 id="config-state-default-"><em><code>config.state</code></em> <em>default: <em>{}</em></em></h4>
+<p>The starting state of the component. This can be a static object or 
+a function that is passed the component&#39;s properties. Note that declarative 
+animations require changes to-and-from states to animate. This method allows 
+the component to render in the correct state for the current <code>act</code> value.</p>
+<h3 id="animation"><code>animation</code></h3>
+<p><code>animation(config, Component)</code></p>
+<h4 id="config-animation"><em><code>config.animation</code></em></h4>
+<p>A function returning the animation to be ran when <code>when</code> asserts <code>true</code>.</p>
+<h4 id="config-state-default-"><em><code>config.state</code></em> <em>default: <em>{}</em></em></h4>
+<p>See <code>act</code> state above.</p>
+<h4 id="config-when-default-true"><em><code>config.when</code></em> <em>default: <em>() =&gt; true</em></em></h4>
+<p>A function that returns a boolean indicating if the animation should be active.</p>
+<h2 id="lists">Lists</h2>
+<p>Both <code>act</code> and <code>animation</code> can take an array of React components to render. The 
+key will be the index of the element in the array.</p>
+<h2 id="currying">Currying</h2>
+<p>Both <code>act</code> and <code>animation</code> are curried, allowing you to functionally compose 
+your components:</p>
+<pre><code class="language-js">import act from &#39;@immutabl3/act&#39;;
+import fluid from &#39;@immutabl3/fluid&#39;;
+
+// creating a curried animation
+// by not passing the component
+// to act
+const animation = act({
+  state: { x: 0 },
+  open(props, state) {
+    return fluid(
+      { x: state.x },
+      { x: 100 }
+    );
+  },
+  close(props, state) {
+    return fluid(
+      { x: state.x },
+      { x: 0 }
+    );
+  },
+});
+
+// animation is now a curried function 
+// and can be called with a component later:
+export default animation(Component);</code></pre>
+<h2 id="tests">Tests</h2>
+<p>Clone the repo, then:</p>
+<ol>
+<li><code>npm install</code></li>
+<li><code>npm test</code></li>
+</ol>
+<h2 id="license">License</h2>
+<p>The MIT License (MIT)</p>
+<p>Copyright (c) 2018 Immutable, LLC</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>
