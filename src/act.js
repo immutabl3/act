@@ -1,102 +1,100 @@
 import React, { Component } from 'react';
 import curry from 'lodash.curry';
 
-const act = function(config = {}, View) {
+const act = function(cnfg = {}, View) {
+	const config = typeof cnfg === 'function' ? 
+		cnfg() : 
+		Object.assign({}, cnfg);
+
 	const {
 		key = 'act',
 		state = {},
 	} = config;
 
-	return function(configurator) {
-		const config = typeof configurator === 'function' ? 
-			configurator() : 
-			Object.assign({}, configurator);
+	return class Act extends Component {
+		constructor(props) {
+			super(props);
 
-		return class Act extends Component {
-			constructor(props) {
-				super(props);
+			this.onUpdate = this.onUpdate.bind(this);
+			this.start = this.start.bind(this);
+			this.stop = this.stop.bind(this);
 
-				this.onUpdate = this.onUpdate.bind(this);
-				this.start = this.start.bind(this);
-				this.stop = this.stop.bind(this);
+			const initialState = typeof state === 'function' ? 
+				state(props) : 
+				Object.assign({}, state);
+			this.state = initialState;
+		}
 
-				const initialState = typeof state === 'function' ? 
-					state(props) : 
-					Object.assign({}, state);
-				this.state = initialState;
-			}
+		componentDidMount() {
+			// check for an animation function
+			const fn = config[this.props[key]];
+			if (!fn) return;
 
-			componentDidMount() {
-				// check for an animation function
-				const fn = config[this.props[key]];
-				if (!fn) return;
+			// create the animation
+			const anim = fn(this.props, this.state);
 
-				// create the animation
-				const anim = fn(this.props, this.state);
+			this.anim = Array.isArray(anim) ? 
+				anim.map(this.start) : 
+				this.start(anim);
+		}
 
-				this.anim = Array.isArray(anim) ? 
-					anim.map(this.start) : 
-					this.start(anim);
-			}
+		componentDidUpdate(prevProps) {
+			// no change
+			if (this.props[key] === prevProps[key]) return;
+			
+			// check for an animation function
+			const fn = config[this.props[key]];
+			if (!fn) return;
 
-			componentDidUpdate(prevProps) {
-				// no change
-				if (this.props[key] === prevProps[key]) return;
-				
-				// check for an animation function
-				const fn = config[this.props[key]];
-				if (!fn) return;
+			// cleanup the current animation
+			this.stop();
 
-				// cleanup the current animation
-				this.stop();
+			// create the animation
+			const anim = fn(this.props, this.state);
 
-				// create the animation
-				const anim = fn(this.props, this.state);
+			this.anim = Array.isArray(anim) ? 
+				anim.map(this.start) : 
+				this.start(anim);
+		}
 
-				this.anim = Array.isArray(anim) ? 
-					anim.map(this.start) : 
-					this.start(anim);
-			}
+		componentWillUnmount() {
+			this.stop();
+		}
+		
+		onUpdate(obj) {
+			this.setState(obj);
+		}
 
-			componentWillUnmount() {
-				this.stop();
+		start(anim) {
+			return anim
+				.on('update', this.onUpdate)
+				.start();
+		}
+
+		stop() {
+			if (!this.anim) return;
+
+			if (Array.isArray(this.anim)) {
+				this.anim.forEach(anim => anim.stop());
+			} else {
+				this.anim.stop();
 			}
 			
-			onUpdate(obj) {
-				this.setState(obj);
-			}
+			this.anim = undefined;
+		}
 
-			start(anim) {
-				return anim
-					.on('update', this.onUpdate)
-					.start();
-			}
-
-			stop() {
-				if (!this.anim) return;
-
-				if (Array.isArray(this.anim)) {
-					this.anim.forEach(anim => anim.stop());
-				} else {
-					this.anim.stop();
-				}
-				
-				this.anim = undefined;
-			}
-
-			render() {
-				return (
-					React.createElement(
-						View,
-						Object.assign(
-							{},
-							this.props,
-							this.state
-						)
+		render() {
+			return (
+				React.createElement(
+					View,
+					Object.assign(
+						{},
+						this.props,
+						this.state
 					)
-				);
-			}
-		};
+				)
+			);
+		}
 	};
 };
 

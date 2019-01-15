@@ -3,7 +3,11 @@ import curry from 'lodash.curry';
 
 const truthy = () => true;
 
-const actAnimation = function(config = {}, View) {
+const actAnimation = function(cnfg = {}, View) {
+	const config = typeof cnfg === 'function' ? 
+		cnfg() : 
+		Object.assign({}, cnfg);
+
 	const {
 		animation,
 		state = {},
