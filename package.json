@@ -40,6 +40,6 @@
     "react": "^16.6.3"
   },
   "dependencies": {
-    "lodash": "^4.17.11"
+    "lodash.curry": "^4.1.1"
   }
 }

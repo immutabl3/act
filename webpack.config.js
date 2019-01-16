@@ -16,7 +16,7 @@ module.exports = {
 	},
 	externals: [
 		'react',
-		'lodash'
+		'lodash.curry'
 	],
 	module: {
 		rules: [

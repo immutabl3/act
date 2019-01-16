@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import curry from 'lodash/curry';
+import curry from 'lodash.curry';
 
 const act = function(cnfg = {}, View) {
 	const config = typeof cnfg === 'function' ? 
@@ -98,4 +98,4 @@ const act = function(cnfg = {}, View) {
 	};
 };
 
-export default curry(act);
+export default curry(act, 2);

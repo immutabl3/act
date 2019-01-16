@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import curry from 'lodash/curry';
+import curry from 'lodash.curry';
 
 const truthy = () => true;
 
@@ -83,4 +83,4 @@ const actAnimation = function(cnfg = {}, View) {
 	};
 };
 
-export default curry(actAnimation);
+export default curry(actAnimation, 2);
